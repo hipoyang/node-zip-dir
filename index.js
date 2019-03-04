@@ -38,6 +38,10 @@ function zipBuffer (rootDir, options, callback) {
 
   folders[rootDir] = zip;
 
+  if (options.files) {
+    addMemoryFile(options.files);
+  }
+
   dive(rootDir, function (err) {
     if (err) return callback(err);
 
@@ -91,5 +95,13 @@ function zipBuffer (rootDir, options, callback) {
         fileQueue.push({ fullPath: fullPath, dir: dir, file: file }, cb);
       }
     });
+  }
+
+  function addMemoryFile (fileDict) {
+    if (fileDict) {
+      Object.keys(fileDict).forEach(function(filename) {
+        zip.file(filename, fileDict[filename]);
+      })
+    }
   }
 }
